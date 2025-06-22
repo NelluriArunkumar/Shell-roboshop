@@ -60,6 +60,7 @@ VALIDATE $? "Unzipping the frontend code"
 
 
 cp $SCRIPT_DIR/nginx.conf /etc/nginx/nginx.conf
+VALIDATE $? "Copying the nginx.conf"
 
 systemctl restart nginx 
 VALIDATE $? "Restarting the nginx"
