@@ -35,20 +35,20 @@ VALIDATE(){
     fi
 }
 
-dnf module disable nodejs -y
+dnf module disable nodejs -y &>>$LOG_FILE
 VALIDATE $? "Disabling the nodejs"
 
-dnf module enable nodejs:20 -y
+dnf module enable nodejs:20 -y &>>$LOG_FILE
 VALIDATE $? "Enabling the nodejs 20 version"
 
-dnf install nodejs -y
+dnf install nodejs -y &>>$LOG_FILE
 VALIDATE $? "Installing the nodejs"
 
 id roboshop
 
 if [ $? -ne 0 ]
 then
-    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
+    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$LOG_FILE
     VALIDATE $? "Creating the roboshop system user"
 else
     echo -e "System user roboshop already created... $Y Skipping $N"
@@ -57,23 +57,23 @@ fi
 mkdir -p /app
 VALIDATE $? "Creating app directory"
 
-curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip
+curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip &>>$LOG_FILE
 VALIDATE $? "Downloading the Catalogue"
 
 rm -rf /app/*
 cd /app 
-unzip /tmp/catalogue.zip
+unzip /tmp/catalogue.zip &>>$LOG_FILE
 VALIDATE $? "Unzipping the catalogue"
 
-npm install 
+npm install &>>$LOG_FILE
 VALIDATE $? "Installing dependencies"
 
 cp $SCRIPT_DIR/catalogue.service /etc/systemd/system/catalogue.service
 VALIDATE $? "Copying catalogue service"
 
-systemctl daemon-reload
-systemctl enable catalogue 
-systemctl start catalogue
+systemctl daemon-reload &>>$LOG_FILE
+systemctl enable catalogue &>>$LOG_FILE
+systemctl start catalogue &>>$LOG_FILE
 VALIDATE $? "Starting the Catalogue"
 
 cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo 
@@ -84,7 +84,7 @@ VALIDATE $? "Installing MongoDB Client"
 STATUS=$(mongosh --host mongodb.arunkumarnelluri.site --eval 'db.getMongo().getDBNames().indexOf("catalogue")')
 if [ STATUS -lt 0 ]
 then
-    mongosh --host mongodb.arunkumarnelluri.site </app/db/master-data.js
+    mongosh --host mongodb.arunkumarnelluri.site </app/db/master-data.js &>>$LOG_FILE
     VALIDATE $? "Loading data into mongo db"
 else
     echo -e "Data is already loaded...$Y SKIPPING $N"
