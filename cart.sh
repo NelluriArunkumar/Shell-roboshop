@@ -81,5 +81,5 @@ systemctl start cart &>>$LOG_FILE
 VALIDATE $? "Starting the cart"
 
 END_TIME=$(date +%s)
-TOTAL_TIME=$(( $START_TIME - $END_TIME ))
+TOTAL_TIME=$(( $END_TIME - $START_TIME ))
 echo -e "Script execute successfully, $Y Time taken: $TOTAL_TIME seconds $N" | tee -a $LOG_FILE
