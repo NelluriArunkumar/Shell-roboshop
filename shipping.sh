@@ -83,7 +83,7 @@ dnf install mysql -y &>>$LOG_FILE
 VALIDATE $? "Installing mysql"
 
 mysql -h mysql.arunkumarnelluri.site -u root -p$MYSQL_ROOT_PASSWORD -e 'use cities' &>>$LOG_FILE
-if [ $? -ne 0]
+if [ $? -ne 0 ]
 then
     mysql -h mysql.arunkumarnelluri.site -uroot -pRoboShop@1 < /app/db/schema.sql &>>$LOG_FILE
     mysql -h mysql.arunkumarnelluri.site -uroot -pRoboShop@1 < /app/db/app-user.sql &>>$LOG_FILE
