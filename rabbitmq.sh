@@ -26,6 +26,7 @@ fi
 
 echo "Please enter rabbitmq password to setup"
 read -s RABBITMQ_PASSWD
+echo -e "Password entered...$Y PROCEDING FURTHER $N"
 
 # validate functions takes input as exit status, what command they tried to install
 VALIDATE(){
