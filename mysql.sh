@@ -49,4 +49,4 @@ VALIDATE $? "Setting the mysql root password"
 
 END_TIME=$( date +%s )
 TOTAL_TIME=$(( $END_TIME - $START_TIME ))
-echo -e "Script executed successfully, $Y Time taken: $TOTAL_TIME $N" | tee -a $LOG_FILE
+echo -e "Script executed successfully, $Y Time taken: $TOTAL_TIME seconds $N" | tee -a $LOG_FILE
