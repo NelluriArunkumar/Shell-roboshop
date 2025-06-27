@@ -35,44 +35,44 @@ VALIDATE(){
     fi
 }
 
-dnf install python3 gcc python3-devel -y
+dnf install python3 gcc python3-devel -y &>>$LOG_FILE
 VALIDATE $? "Installing the python3 packages"
 
 id roboshop
 
 if [ $? -ne 0 ]
 then
-    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
+    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$LOG_FILE
     VALIDATE $? "Creating the robosho system user"
 else
-    echo -e "Robosho system user already created....$Y SKIPPING $N"
+    echo -e "Robosho system user already created....$Y SKIPPING $N" &>>$LOG_FILE
 fi
 
-mkdir -p /app 
+mkdir -p /app &>>$LOG_FILE
 VALIDATE $? "Creating the app directory"
 
-curl -L -o /tmp/payment.zip https://roboshop-artifacts.s3.amazonaws.com/payment-v3.zip 
+curl -L -o /tmp/payment.zip https://roboshop-artifacts.s3.amazonaws.com/payment-v3.zip &>>$LOG_FILE 
 VALIDATE $? "Downloading the payment code"
 
 rm -rf /app/*
 cd /app
 
-unzip /tmp/payment.zip
+unzip /tmp/payment.zip &>>$LOG_FILE
 VALIDATE $? "Unzipping the payment code"
 
-pip3 install -r requirements.txt
+pip3 install -r requirements.txt &>>$LOG_FILE
 VALIDATE $? "Installing the python dependencies"
 
-cp $SCRIPT_DIR/payment.service /etc/systemd/system/payment.service
+cp $SCRIPT_DIR/payment.service /etc/systemd/system/payment.service &>>$LOG_FILE
 VALIDATE $? "Copying the payment service to systemd"
 
-systemctl daemon-reload
+systemctl daemon-reload &>>$LOG_FILE
 VALIDATE $? "Daemon reloading"
 
-systemctl enable payment
+systemctl enable payment &>>$LOG_FILE
 VALIDATE $? "Enabling the payment"
 
-systemctl start payment
+systemctl start payment &>>$LOG_FILE
 VALIDATE $? "Starting the payment"
 
 END_TIME=$(date +%s)
